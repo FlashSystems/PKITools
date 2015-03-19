@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array/>
+	<key>name</key>
+	<string>PKITools ASN.1 Dump</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>comment</key>
+			<string>Highlight error lines.</string>
+			<key>match</key>
+			<string>^ERROR:</string>
+			<key>name</key>
+			<string>invalid.illegal.error.pkitools</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.class</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Sequences and sets</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:)]+) \(([^)]+)\)$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>comment</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Integer and Real value</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:]+): ([0-9.,]+) (\([^)]+\))?$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Boolean and Null-Value</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:]+): (TRUE|FALSE|NULL)$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>comment</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>OIDs</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:]+): (\.[^(]+)(\([^)]+\))?$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>comment</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>String types</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:]+): (\([^)]+\))$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>constant.numeric</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Times</string>
+			<key>match</key>
+			<string>^\s*(?:\[([0-9])\] )?([^:]+): ([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]+ [Z+-][0-9]*)$</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Strings in general</string>
+			<key>match</key>
+			<string>"[^"]*"</string>
+			<key>name</key>
+			<string>string</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Hex-Dumps in general</string>
+			<key>match</key>
+			<string>0x[0-9a-fA-F]+</string>
+			<key>name</key>
+			<string>comment.hexdump.pkitools</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.pkitools</string>
+	<key>uuid</key>
+	<string>689e468f-e038-470a-ac20-d69de48c5aa3</string>
+</dict>
+</plist>

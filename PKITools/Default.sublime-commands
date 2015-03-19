@@ -1,0 +1,17 @@
+[
+	{
+		"caption": "PKITools: Decode ASN.1 structure...",
+		"command": "pki_parse_certificate",
+		"args": { "codec": "asn1" }
+	},
+	{
+		"caption": "PKITools: Decode X509 certificate...",
+		"command": "pki_parse_certificate",
+		"args": { "codec": "rfc2459-cert" }
+	},
+	{
+		"caption": "PKITools: Decode X509 CRL...",
+		"command": "pki_parse_certificate",
+		"args": { "codec": "rfc2459-crl" }
+	}
+]
