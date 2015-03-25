@@ -60,11 +60,6 @@ class DumpFormater:
         return "{0}{1}({2})".format(name, spacer, asn1construct)
 
 
-    def formatAttributeValue(self, name, record, out):
-        attributeValue, rest = decoder.decode(record)
-
-        self.formatSameLevel(name, attributeValue, out)
-
     def format(self, name, record, out):
         # Indent one step because this recursion is one level deepr than the one before
         out.indent()
@@ -85,11 +80,10 @@ class DumpFormater:
         # the index of the instance.
         namePrefix = ""
         tags = record.getTagSet()
-        if (len(tags) > 0):
+        if (isinstance(tags, tag.TagSet) and len(tags) > 0):
             cls, fmt, nr = tags[-1]
-            if (cls == tag.tagClassContext):
+            if (cls is tag.tagClassContext):
                 namePrefix = "[" + str(nr) + "] "
-
         if (isinstance(record, univ.Choice)):
             self.format(name, record.getComponent(), out)
 
@@ -112,11 +106,15 @@ class DumpFormater:
         else:
             if (name is None): name = "?"
 
-            # Ok, it's non of the understood complex types.
-            # Call the scalar formater to format it as a simple type.
-            # The result can be a string (str) or a list. The list is output
-            # with the second and all follwoing elements indented below the first
-            formatedResult = self.callMethodUnderstandingClass(self.scalarFormaters, record)
+            # There may be empty types. These contain nothing and are marked by a "{}" symbol.
+            if (not record):
+                formatedResult = "{}"
+            else:
+                # Ok, it's non of the understood complex types and it's not empty.
+                # Call the scalar formater to format it as a simple type.
+                # The result can be a string (str) or a list. The list is output
+                # with the second and all follwoing elements indented below the first
+                formatedResult = self.callMethodUnderstandingClass(self.scalarFormaters, record)
 
             # If the formated result is None. Then no formater was found. Output the
             # class and a ?

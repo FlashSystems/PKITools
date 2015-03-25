@@ -1,6 +1,7 @@
 import sublime, sublime_plugin
 from .asn1formater.pyasn1.codec.der import decoder, encoder
-from .asn1formater.pyasn1_modules import rfc2459, pem
+from .asn1formater.pyasn1.codec.ber import decoder as berDecoder
+from .asn1formater.pyasn1_modules import rfc5280, pem
 from .asn1formater.pyasn1 import error
 from .asn1formater.formaters import scalars, translators
 from .asn1formater import oids
@@ -9,6 +10,7 @@ import sys
 import re
 import os
 import base64
+import traceback
 import binascii
 
 class ViewOutput():
@@ -36,7 +38,7 @@ class ViewOutput():
 		self.writeLine("ERROR: " + message)
 
 
-class PkiParseCertificateCommand(sublime_plugin.TextCommand):
+class PkiParseAsn1Command(sublime_plugin.TextCommand):
 	encodingHex = re.compile("^(?:0x)?([a-fA-f0-9 \r\n]+)$")
 	encodingBase64 = re.compile("^([a-zA-Z0-9+/=\n]+)$")
 	encodingPEM = re.compile("---+(?:START|BEGIN)[A-Za-z ]+---+\n([a-zA-Z0-9+/=\n]+)---+END[A-Za-z ]+---+")
@@ -74,9 +76,15 @@ class PkiParseCertificateCommand(sublime_plugin.TextCommand):
 		oidResolver = oids.OIDResolver(os.path.join(sublime.packages_path(), "PKITools", "dumpasn1.cfg"))
 
 
-		if (codec == "rfc2459-cert"):
-			codec = rfc2459.Certificate()
+		if (codec == "rfc5280-cert"):
+			codec = rfc5280.Certificate()
 			codecName = "X509 certificate"
+		elif (codec == "rfc5280-crl"):
+			codec = rfc5280.Certificate()
+			codecName = "X509 CRL"
+		elif (codec == "rfc4210-message")
+			codec = rfc4210.PKIMessage()
+			codecName = "CMP message"
 		else:
 			codec = None
 			codecName = "ASN.1"
@@ -98,6 +106,8 @@ class PkiParseCertificateCommand(sublime_plugin.TextCommand):
 			return
 
 		try:
+			# Set the error mode to DumpRawValue to make the decoder more error tollerant
+			decoder.decode.defaultErrorState =  berDecoder.stDumpRawValue
 			cert, rest = decoder.decode(substrate, asn1Spec=codec)
 
 			if rest: substrate = substrate[:-len(rest)]
@@ -109,8 +119,7 @@ class PkiParseCertificateCommand(sublime_plugin.TextCommand):
 		except error.ValueConstraintError:
 			viewOutput.showError("Valuce constraint violated in input data.")
 		except:
-			e = sys.exc_info()[0]
-			viewOutput.showError(str(e))
+			viewOutput.showError(traceback.format_exc())
 
 	def run(self, edit, codec="asn1"):
 		newView = self.view.window().new_file()

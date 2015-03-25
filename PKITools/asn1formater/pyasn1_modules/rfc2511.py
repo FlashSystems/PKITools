@@ -10,8 +10,6 @@ from ..pyasn1.type import tag, namedtype, namedval, univ, constraint, char,usefu
 from .rfc2459 import *
 from . import rfc2315
 
-MAX=16
-
 id_pkix = univ.ObjectIdentifier('1.3.6.1.5.5.7')
 id_pkip = univ.ObjectIdentifier('1.3.6.1.5.5.7.5')
 id_regCtrl = univ.ObjectIdentifier('1.3.6.1.5.5.7.5.1')
@@ -77,7 +75,7 @@ class SinglePubInfo(univ.Sequence):
 class PKIPublicationInfo(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('action', univ.Integer(namedValues=namedval.NamedValues(('dontPublish', 0), ('pleasePublish', 1)))),
-        namedtype.OptionalNamedType('pubInfos', univ.SequenceOf(componentType=SinglePubInfo()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX)))
+        namedtype.OptionalNamedType('pubInfos', univ.SequenceOf(componentType=SinglePubInfo()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX)))
     )
 
 class Authenticator(char.UTF8String): pass
@@ -133,7 +131,7 @@ class ProofOfPossession(univ.Choice):
 
 class Controls(univ.SequenceOf):
     componentType = AttributeTypeAndValue()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class OptionalValidity(univ.Sequence):
     componentType = namedtype.NamedTypes(
@@ -168,9 +166,9 @@ class CertReqMsg(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('certReq', CertRequest()),
         namedtype.OptionalNamedType('pop', ProofOfPossession()),
-        namedtype.OptionalNamedType('regInfo', univ.SequenceOf(componentType=AttributeTypeAndValue()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX)))
+        namedtype.OptionalNamedType('regInfo', univ.SequenceOf(componentType=AttributeTypeAndValue()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX)))
 	)
         
 class CertReqMessages(univ.SequenceOf):
     componentType = CertReqMsg()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)

@@ -111,7 +111,7 @@ class ScalarsFormater:
     def bitstringToHex(self, bitstring):
         hexValue = ""
 
-        for i in range(0, len(bitstring) - 1, 8):
+        for i in range(0, len(bitstring), 8):
             value = 0
             for bit in bitstring[i:i+7]:
                 value <<= 1;

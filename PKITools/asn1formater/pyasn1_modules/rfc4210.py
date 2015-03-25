@@ -6,8 +6,6 @@
 from ..pyasn1.type import tag,namedtype,namedval,univ,constraint,char,useful
 from . import rfc2459, rfc2511, rfc2314
 
-MAX = 64
-
 class KeyIdentifier(univ.OctetString): pass
 
 class CMPCertificate(rfc2459.Certificate): pass
@@ -21,7 +19,7 @@ class PKIFreeText(univ.SequenceOf):
     PKIFreeText ::= SEQUENCE SIZE (1..MAX) OF UTF8String
     """
     componentType = char.UTF8String()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class PollRepContent(univ.SequenceOf):
     """
@@ -321,14 +319,14 @@ class RevRepContent(univ.Sequence):
         namedtype.OptionalNamedType('revCerts', univ.SequenceOf(
                 componentType=rfc2511.CertId()
             ).subtype(
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX),
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX),
                 explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 0)
             )
         ),
         namedtype.OptionalNamedType('crls', univ.SequenceOf(
                 componentType=rfc2459.CertificateList()
             ).subtype(
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX),
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX),
                 explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1)
             )
         )
@@ -355,14 +353,14 @@ class KeyRecRepContent(univ.Sequence):
                 componentType=CMPCertificate()
             ).subtype(
                 explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1),
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX)
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX)
             )
         ),
         namedtype.OptionalNamedType('keyPairHist', univ.SequenceOf(
                 componentType=CertifiedKeyPair()
             ).subtype(
                 explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 2),
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX)
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX)
             )
         )
     )
@@ -395,7 +393,7 @@ class CertRepMessage(univ.Sequence):
         namedtype.OptionalNamedType('caPubs', univ.SequenceOf(
                 componentType=CMPCertificate()
             ).subtype(
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX),
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX),
                 explicitTag=tag.Tag(tag.tagClassContext,tag.tagFormatConstructed,1)
             )
         ),
@@ -665,7 +663,7 @@ class PKIHeader(univ.Sequence):
         namedtype.OptionalNamedType('generalInfo',
             univ.SequenceOf(
                 componentType=InfoTypeAndValue().subtype( 
-                    subtypeSpec=constraint.ValueSizeConstraint(1, MAX),
+                    subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX),
                     explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 8)
                     )
                 )
@@ -701,7 +699,7 @@ class PKIMessage(univ.Sequence):
             univ.SequenceOf(
                 componentType=CMPCertificate()
             ).subtype(
-                subtypeSpec=constraint.ValueSizeConstraint(1, MAX),
+                subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX),
                 explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1)
             )
         )
@@ -712,7 +710,7 @@ class PKIMessages(univ.SequenceOf):
     PKIMessages ::= SEQUENCE SIZE (1..MAX) OF PKIMessage
     """
     componentType = PKIMessage()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 # pyasn1 does not naturally handle recursive definitions, thus this hack:
 # NestedMessageContent ::= PKIMessages

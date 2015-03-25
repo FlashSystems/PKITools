@@ -52,7 +52,10 @@ class ExplicitTagDecoder(AbstractSimpleDecoder):
                        substrate, length
                    )
         head, tail = substrate[:length], substrate[length:]
-        value, _ = decodeFun(head, asn1Spec, tagSet, length)
+        if not head:
+            value = self._createComponent(asn1Spec, tagSet)
+        else:
+            value, _ = decodeFun(head, asn1Spec, tagSet, length)
         return value, tail
 
     def indefLenValueDecoder(self, fullSubstrate, substrate, asn1Spec, tagSet,

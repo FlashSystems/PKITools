@@ -1,17 +1,22 @@
 [
 	{
 		"caption": "PKITools: Decode ASN.1 structure...",
-		"command": "pki_parse_certificate",
+		"command": "pki_parse_asn1",
 		"args": { "codec": "asn1" }
 	},
 	{
 		"caption": "PKITools: Decode X509 certificate...",
-		"command": "pki_parse_certificate",
-		"args": { "codec": "rfc2459-cert" }
+		"command": "pki_parse_asn1",
+		"args": { "codec": "rfc5280-cert" }
+	},
+	{
+		"caption": "PKITools: Decode CMP message...",
+		"command": "pki_parse_asn1",
+		"args": { "codec": "rfc4210-message" }
 	},
 	{
 		"caption": "PKITools: Decode X509 CRL...",
-		"command": "pki_parse_certificate",
-		"args": { "codec": "rfc2459-crl" }
+		"command": "pki_parse_asn1",
+		"args": { "codec": "rfc5280-crl" }
 	}
 ]

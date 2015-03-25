@@ -10,8 +10,6 @@
 #
 from ..pyasn1.type import tag,namedtype,namedval,univ,constraint,char,useful
 
-MAX = 64  # XXX ?
-
 #
 # PKIX1Explicit88
 #
@@ -211,12 +209,12 @@ class Name(univ.Choice):
 
 class DirectoryString(univ.Choice):
     componentType = namedtype.NamedTypes(
-        namedtype.NamedType('teletexString', char.TeletexString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
-        namedtype.NamedType('printableString', char.PrintableString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
-        namedtype.NamedType('universalString', char.UniversalString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
-        namedtype.NamedType('utf8String', char.UTF8String().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
-        namedtype.NamedType('bmpString', char.BMPString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
-        namedtype.NamedType('ia5String', char.IA5String().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX))) # hm, this should not be here!? XXX
+        namedtype.NamedType('teletexString', char.TeletexString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
+        namedtype.NamedType('printableString', char.PrintableString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
+        namedtype.NamedType('universalString', char.UniversalString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
+        namedtype.NamedType('utf8String', char.UTF8String().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
+        namedtype.NamedType('bmpString', char.BMPString().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
+        namedtype.NamedType('ia5String', char.IA5String().subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))) # hm, this should not be here!? XXX
         )
 
 # certificate and CRL specific structures begin here
@@ -236,7 +234,7 @@ class Extension(univ.Sequence):
 
 class Extensions(univ.SequenceOf):
     componentType = Extension()
-    sizeSpec = univ.SequenceOf.sizeSpec + constraint.ValueSizeConstraint(1, MAX)
+    sizeSpec = univ.SequenceOf.sizeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class SubjectPublicKeyInfo(univ.Sequence):
      componentType = namedtype.NamedTypes(
@@ -386,7 +384,7 @@ class PresentationAddress(univ.Sequence):
         namedtype.OptionalNamedType('pSelector', univ.OctetString().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 0))),
         namedtype.OptionalNamedType('sSelector', univ.OctetString().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 1))),
         namedtype.OptionalNamedType('tSelector', univ.OctetString().subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 2))),
-        namedtype.OptionalNamedType('nAddresses', univ.SetOf(componentType=univ.OctetString()).subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 3), subtypeSpec=constraint.ValueSizeConstraint(1, MAX))),
+        namedtype.OptionalNamedType('nAddresses', univ.SetOf(componentType=univ.OctetString()).subtype(explicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 3), subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX))),
     )
 
 extended_network_address = univ.Integer(22)
@@ -644,7 +642,7 @@ class CRLReason(univ.Enumerated):
 id_ce_cRLNumber = univ.ObjectIdentifier('2.5.29.20')
 
 class CRLNumber(univ.Integer):
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(0, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(0, constraint.MAX)
 
 class BaseCRLNumber(CRLNumber): pass
 
@@ -663,7 +661,7 @@ class KeyPurposeId(univ.ObjectIdentifier): pass
 
 class ExtKeyUsageSyntax(univ.SequenceOf):
     componentType = KeyPurposeId()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class ReasonFlags(univ.BitString):
     namedValues = namedval.NamedValues(
@@ -678,7 +676,7 @@ class ReasonFlags(univ.BitString):
 
 
 class SkipCerts(univ.Integer):
-    subtypeSpec = univ.Integer.subtypeSpec + constraint.ValueSizeConstraint(0, MAX)
+    subtypeSpec = univ.Integer.subtypeSpec + constraint.ValueSizeConstraint(0, constraint.MAX)
 
 id_ce_policyConstraints = univ.ObjectIdentifier('2.5.29.36')
 
@@ -693,14 +691,14 @@ id_ce_basicConstraints = univ.ObjectIdentifier('2.5.29.19')
 class BasicConstraints(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('cA', univ.Boolean(False)),
-        namedtype.OptionalNamedType('pathLenConstraint', univ.Integer().subtype(subtypeSpec=constraint.ValueRangeConstraint(0, MAX)))
+        namedtype.OptionalNamedType('pathLenConstraint', univ.Integer().subtype(subtypeSpec=constraint.ValueRangeConstraint(0, constraint.MAX)))
     )
 
 id_ce_subjectDirectoryAttributes = univ.ObjectIdentifier('2.5.29.9')
 
 class SubjectDirectoryAttributes(univ.SequenceOf):
     componentType = Attribute()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class EDIPartyName(univ.Sequence):
     componentType = namedtype.NamedTypes(
@@ -729,7 +727,7 @@ class GeneralName(univ.Choice):
 
 class GeneralNames(univ.SequenceOf):
     componentType = GeneralName()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 class AccessDescription(univ.Sequence):
     componentType = namedtype.NamedTypes(
@@ -739,7 +737,7 @@ class AccessDescription(univ.Sequence):
 
 class AuthorityInfoAccessSyntax(univ.SequenceOf):
     componentType = AccessDescription()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 id_ce_deltaCRLIndicator = univ.ObjectIdentifier('2.5.29.27')
 
@@ -756,13 +754,13 @@ class DistributionPoint(univ.Sequence):
         namedtype.OptionalNamedType('cRLIssuer', GeneralNames().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 2)))
     )
 class BaseDistance(univ.Integer):
-    subtypeSpec = univ.Integer.subtypeSpec + constraint.ValueRangeConstraint(0, MAX)
+    subtypeSpec = univ.Integer.subtypeSpec + constraint.ValueRangeConstraint(0, constraint.MAX)
 
 id_ce_cRLDistributionPoints = univ.ObjectIdentifier('2.5.29.31')
 
 class CRLDistPointsSyntax(univ.SequenceOf):
     componentType = DistributionPoint()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 id_ce_issuingDistributionPoint = univ.ObjectIdentifier('2.5.29.28')
 
 class IssuingDistributionPoint(univ.Sequence):
@@ -783,7 +781,7 @@ class GeneralSubtree(univ.Sequence):
 
 class GeneralSubtrees(univ.SequenceOf):
     componentType = GeneralSubtree()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 id_ce_nameConstraints = univ.ObjectIdentifier('2.5.29.30')
 
@@ -831,12 +829,12 @@ id_ce_certificatePolicies = univ.ObjectIdentifier('2.5.29.32')
 class PolicyInformation(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('policyIdentifier', CertPolicyId()),
-        namedtype.OptionalNamedType('policyQualifiers', univ.SequenceOf(componentType=PolicyQualifierInfo()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, MAX)))
+        namedtype.OptionalNamedType('policyQualifiers', univ.SequenceOf(componentType=PolicyQualifierInfo()).subtype(subtypeSpec=constraint.ValueSizeConstraint(1, constraint.MAX)))
     )
 
 class CertificatePolicies(univ.SequenceOf):
     componentType = PolicyInformation()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 id_ce_policyMappings = univ.ObjectIdentifier('2.5.29.33')
 
@@ -848,7 +846,7 @@ class PolicyMapping(univ.Sequence):
 
 class PolicyMappings(univ.SequenceOf):
     componentType = PolicyMapping()
-    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, MAX)
+    subtypeSpec = univ.SequenceOf.subtypeSpec + constraint.ValueSizeConstraint(1, constraint.MAX)
 
 id_ce_privateKeyUsagePeriod = univ.ObjectIdentifier('2.5.29.16')
 

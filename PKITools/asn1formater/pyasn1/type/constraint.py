@@ -14,6 +14,9 @@
 import sys
 from . import error
 
+MAX = None
+MIN = None
+
 class AbstractConstraint:
     """Abstract base-class for constraint objects
 
@@ -82,7 +85,7 @@ class ContainedSubtypeConstraint(AbstractConstraint):
 class ValueRangeConstraint(AbstractConstraint):
     """Value must be within start and stop values (inclusive)"""
     def _testValue(self, value, idx):
-        if value < self.start or value > self.stop:
+        if (not self.start is None and value < self.start) or (not self.stop is None and value > self.stop):
             raise error.ValueConstraintError(value)
 
     def _setValues(self, values):
@@ -91,7 +94,7 @@ class ValueRangeConstraint(AbstractConstraint):
                 '%s: bad constraint values' % (self.__class__.__name__,)
                 )
         self.start, self.stop = values
-        if self.start > self.stop:
+        if not self.start is None and not self.stop is None and self.start > self.stop:
             raise error.PyAsn1Error(
                 '%s: screwed constraint values (start > stop): %s > %s' % (
                     self.__class__.__name__,
@@ -104,7 +107,7 @@ class ValueSizeConstraint(ValueRangeConstraint):
     """len(value) must be within start and stop values (inclusive)"""
     def _testValue(self, value, idx):
         l = len(value)
-        if l < self.start or l > self.stop:
+        if (not self.start is None and l < self.start) or (not self.stop is None and l > self.stop):
             raise error.ValueConstraintError(value)
 
 class PermittedAlphabetConstraint(SingleValueConstraint):
