@@ -82,7 +82,7 @@ class PkiParseAsn1Command(sublime_plugin.TextCommand):
 		elif (codec == "rfc5280-crl"):
 			codec = rfc5280.Certificate()
 			codecName = "X509 CRL"
-		elif (codec == "rfc4210-message")
+		elif (codec == "rfc4210-message"):
 			codec = rfc4210.PKIMessage()
 			codecName = "CMP message"
 		else:

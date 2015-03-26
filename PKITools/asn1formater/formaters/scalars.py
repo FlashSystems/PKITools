@@ -167,6 +167,13 @@ class ScalarsFormater:
             "0x" + self.bitstringToHex(record)
             ] + bitFieldElements
 
+    @UseFor(univ.Any)
+    def fmtAny(self, record):
+        if (len(record)==0):
+            return "-"
+        else:
+            return self.fmtOctedString(record)
+
     @UseFor(char.NumericString)
     @UseFor(char.PrintableString)
     @UseFor(char.TeletexString)

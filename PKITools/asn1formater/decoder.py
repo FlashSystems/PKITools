@@ -12,7 +12,6 @@ class Decoder(derDecoder.Decoder):
 
 	def __call__(self, substrate, asn1Spec=None, tagSet=None, length=None, state=berDecoder.stDecodeTag, recursiveFlag=1, substrateFun=None):
 		try:
-			#print(substrate)
 			return super(Decoder, self).__call__(substrate, asn1Spec, tagSet, length, state, recursiveFlag, substrateFun)
 		except error.ValueConstraintError:
 			return super(Decoder, self).__call__(substrate, None, None, length, state, recursiveFlag, substrateFun)

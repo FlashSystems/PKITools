@@ -106,15 +106,11 @@ class DumpFormater:
         else:
             if (name is None): name = "?"
 
-            # There may be empty types. These contain nothing and are marked by a "{}" symbol.
-            if (not record):
-                formatedResult = "{}"
-            else:
-                # Ok, it's non of the understood complex types and it's not empty.
-                # Call the scalar formater to format it as a simple type.
-                # The result can be a string (str) or a list. The list is output
-                # with the second and all follwoing elements indented below the first
-                formatedResult = self.callMethodUnderstandingClass(self.scalarFormaters, record)
+            # Ok, it's non of the understood complex types.
+            # Call the scalar formater to format it as a simple type.
+            # The result can be a string (str) or a list. The list is output
+            # with the second and all follwoing elements indented below the first
+            formatedResult = self.callMethodUnderstandingClass(self.scalarFormaters, record)
 
             # If the formated result is None. Then no formater was found. Output the
             # class and a ?
