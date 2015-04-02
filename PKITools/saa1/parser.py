@@ -1,6 +1,7 @@
 # SAA.1 Simple API for ASN.1 (DER) parsing.
 
 from . import primitive
+from . import stringprims
 from .exceptions import *
 
 class ByteStream:	
@@ -129,14 +130,39 @@ class Decoder:
 	primitiveTagMap = {
 		(Class.UNIVERSAL, 0x01): primitive.Boolean,
 		(Class.UNIVERSAL, 0x02): primitive.Integer,
-		(Class.UNIVERSAL, 0x03): primitive.BitString,
-		(Class.UNIVERSAL, 0x04): primitive.OctetString,
+		(Class.UNIVERSAL, 0x03): stringprims.BitString,
+		(Class.UNIVERSAL, 0x04): stringprims.OctetString,
 		(Class.UNIVERSAL, 0x05): primitive.Null,
 		(Class.UNIVERSAL, 0x06): primitive.ObjectIdentifier,
-		(Class.UNIVERSAL, 0x0C): primitive.NumericString,
-		(Class.UNIVERSAL, 0x13): primitive.GraphicString,
+		#(Class.UNIVERSAL, 0x07): primitive.ObjectDescriptor,
+		#(Class.UNIVERSAL, 0x08): primitive.ExternalType,
+		#(Class.UNIVERSAL, 0x09): primitive.Real,
+		(Class.UNIVERSAL, 0x0A): primitive.Enum,
+		#(Class.UNIVERSAL, 0x0B): primitive.EmbeddedBDV,		
+		(Class.UNIVERSAL, 0x0C): stringprims.UTF8String,
+		#(Class.UNIVERSAL, 0x0D): primitive.RelativeObjectIdentifier,
+		#(Class.UNIVERSAL, 0x0E): primitive.Time,
+		#(Class.UNIVERSAL, 0x10): primitive.Sequence,
+		#(Class.UNIVERSAL), 0x11): primitive.SequenceOf,
+		(Class.UNIVERSAL, 0x12): stringprims.NumericString,
+		(Class.UNIVERSAL, 0x13): stringprims.PrintableString,
+		(Class.UNIVERSAL, 0x14): stringprims.TeletexString,
+		(Class.UNIVERSAL, 0x15): stringprims.VideotexString,
+		(Class.UNIVERSAL, 0x16): stringprims.IA5String,
 		(Class.UNIVERSAL, 0x17): primitive.UTCTime,
-		(Class.UNIVERSAL, 0x18): primitive.GeneralizedTime
+		(Class.UNIVERSAL, 0x18): primitive.GeneralizedTime,
+		(Class.UNIVERSAL, 0x19): stringprims.GraphicString,
+		#(Class.UNIVERSAL, 0x1A): stringprims.VisibleString,
+		(Class.UNIVERSAL, 0x1B): stringprims.GeneralString,
+		(Class.UNIVERSAL, 0x1C): stringprims.UniversalString,
+		#(Class.UNIVERSAL, 0x1D): stringprims.UnrestrictedCharacterStringType,
+		(Class.UNIVERSAL, 0x1E): stringprims.BMPString
+		#(Class.UNIVERSAL, 0x1F): primitive.Date,
+		#(Class.UNIVERSAL, 0x20): primitive.TimeOfDay,
+		#(Class.UNIVERSAL, 0x21): primitive.DateTime,
+		#(Class.UNIVERSAL, 0x22): primitive.Duration,
+		#(Class.UNIVERSAL, 0x23): primitive.InternationalOID,
+		#(Class.UNIVERSAL, 0x24): primitive.RelativeInternationalOID
 	}
 
 	# A list of Tags that may contain embedded ASN.1
@@ -193,11 +219,12 @@ class Decoder:
 				if (length is None):
 					raise Saa1IndefiniteSimpleException()
 
-				try:
-					idTuple = (tag.getClass(), tag.getTag())
-					if (idTuple in self.primitiveTagMap):
-						primitiveDecoderClass = self.primitiveTagMap[idTuple]
-						decodedValue = primitiveDecoderClass(stream.getBytes(length))
+				idTuple = (tag.getClass(), tag.getTag())
+				if (idTuple in self.primitiveTagMap):
+					primitiveDecoderClass = self.primitiveTagMap[idTuple]
+					primitiveOctets = stream.getBytes(length)
+					try:
+						decodedValue = primitiveDecoderClass(primitiveOctets)
 
 						# Some ASN.1 simple types can contain ebedded ASN.1.
 						# The classes for these types implement getAllBytes().
@@ -206,10 +233,10 @@ class Decoder:
 						if (idTuple in self.embeddedTagList):
 							# Check if the Byte-Stream contains embedded ASN.1
 							# If that's the case, call back to query if it should be automatically expanded
-							embeddedBytes = decodedValue.getAllBytes()
-							if ((not embeddedBytes is None) and self._isEncodedASN1(ByteStream(embeddedBytes)) and self._out.shouldExpandEmbedded(tag)):
+							embeddedOctets = decodedValue.getAllBytes()
+							if ((not embeddedOctets is None) and self._isEncodedASN1(ByteStream(embeddedOctets)) and self._out.shouldExpandEmbedded(tag)):
 								self._out.beginEmbedded(tag)
-								self._decodeFromStream(ByteStream(embeddedBytes))
+								self._decodeFromStream(ByteStream(embeddedOctets))
 								self._out.endEmbedded(tag)
 								processed = True
 
@@ -217,14 +244,14 @@ class Decoder:
 						# Just go end 
 						if (not processed):
 							self._out.primitive(decodedValue)
-					else:
-						self._out.unkownPrimitive(tag)
 
-						# Skip the unkown primitive and try decoding the next one
-						stream.getBytes(length)
+					except Exception as e:
+						self._out.primitiveDecodingError(tag, str(e), primitiveOctets)
+				else:
+					self._out.unkownPrimitive(tag)
 
-				except Exception as e:
-					self._out.primitiveDecodingError(tag, str(e))
+					# Skip the unkown primitive and try decoding the next one
+					stream.getBytes(length)
 
 	def decode(self, data, out):
 		self._out = out
