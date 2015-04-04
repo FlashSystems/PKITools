@@ -91,6 +91,10 @@ class GeneralString(RestrictedString):
 	_encoding = "ascii"
 	_allowedCharsRegex = None
 
+class VisibleString(RestrictedString):
+	_encoding = "ascii"
+	_allowedCharsRegex = None
+
 class UniversalString(RestrictedString):
 	_encoding = "utf-16"
 	_allowedCharsRegex = None	

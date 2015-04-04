@@ -1,7 +1,6 @@
 # SAA.1 Simple API for ASN.1 (DER) parsing.
 
-from . import primitive
-from . import stringprims
+from .primitives import other, strings, datetime
 from .exceptions import *
 
 class ByteStream:	
@@ -128,41 +127,41 @@ class Class:
 
 class Decoder:
 	primitiveTagMap = {
-		(Class.UNIVERSAL, 0x01): primitive.Boolean,
-		(Class.UNIVERSAL, 0x02): primitive.Integer,
-		(Class.UNIVERSAL, 0x03): stringprims.BitString,
-		(Class.UNIVERSAL, 0x04): stringprims.OctetString,
-		(Class.UNIVERSAL, 0x05): primitive.Null,
-		(Class.UNIVERSAL, 0x06): primitive.ObjectIdentifier,
-		#(Class.UNIVERSAL, 0x07): primitive.ObjectDescriptor,
-		#(Class.UNIVERSAL, 0x08): primitive.ExternalType,
-		#(Class.UNIVERSAL, 0x09): primitive.Real,
-		(Class.UNIVERSAL, 0x0A): primitive.Enum,
-		#(Class.UNIVERSAL, 0x0B): primitive.EmbeddedBDV,		
-		(Class.UNIVERSAL, 0x0C): stringprims.UTF8String,
-		#(Class.UNIVERSAL, 0x0D): primitive.RelativeObjectIdentifier,
-		#(Class.UNIVERSAL, 0x0E): primitive.Time,
-		#(Class.UNIVERSAL, 0x10): primitive.Sequence,
-		#(Class.UNIVERSAL), 0x11): primitive.SequenceOf,
-		(Class.UNIVERSAL, 0x12): stringprims.NumericString,
-		(Class.UNIVERSAL, 0x13): stringprims.PrintableString,
-		(Class.UNIVERSAL, 0x14): stringprims.TeletexString,
-		(Class.UNIVERSAL, 0x15): stringprims.VideotexString,
-		(Class.UNIVERSAL, 0x16): stringprims.IA5String,
-		(Class.UNIVERSAL, 0x17): primitive.UTCTime,
-		(Class.UNIVERSAL, 0x18): primitive.GeneralizedTime,
-		(Class.UNIVERSAL, 0x19): stringprims.GraphicString,
-		#(Class.UNIVERSAL, 0x1A): stringprims.VisibleString,
-		(Class.UNIVERSAL, 0x1B): stringprims.GeneralString,
-		(Class.UNIVERSAL, 0x1C): stringprims.UniversalString,
-		#(Class.UNIVERSAL, 0x1D): stringprims.UnrestrictedCharacterStringType,
-		(Class.UNIVERSAL, 0x1E): stringprims.BMPString
-		#(Class.UNIVERSAL, 0x1F): primitive.Date,
-		#(Class.UNIVERSAL, 0x20): primitive.TimeOfDay,
-		#(Class.UNIVERSAL, 0x21): primitive.DateTime,
-		#(Class.UNIVERSAL, 0x22): primitive.Duration,
-		#(Class.UNIVERSAL, 0x23): primitive.InternationalOID,
-		#(Class.UNIVERSAL, 0x24): primitive.RelativeInternationalOID
+		(Class.UNIVERSAL, 0x01): other.Boolean,
+		(Class.UNIVERSAL, 0x02): other.Integer,
+		(Class.UNIVERSAL, 0x03): strings.BitString,
+		(Class.UNIVERSAL, 0x04): strings.OctetString,
+		(Class.UNIVERSAL, 0x05): other.Null,
+		(Class.UNIVERSAL, 0x06): other.ObjectIdentifier,
+		#(Class.UNIVERSAL, 0x07): other.ObjectDescriptor,
+		#(Class.UNIVERSAL, 0x08): other.ExternalType,
+		#(Class.UNIVERSAL, 0x09): other.Real,
+		(Class.UNIVERSAL, 0x0A): other.Enum,
+		#(Class.UNIVERSAL, 0x0B): other.EmbeddedBDV,		
+		(Class.UNIVERSAL, 0x0C): strings.UTF8String,
+		#(Class.UNIVERSAL, 0x0D): other.RelativeObjectIdentifier,
+		#(Class.UNIVERSAL, 0x0E): other.Time,
+		#(Class.UNIVERSAL, 0x10): other.Sequence,
+		#(Class.UNIVERSAL), 0x11): other.SequenceOf,
+		(Class.UNIVERSAL, 0x12): strings.NumericString,
+		(Class.UNIVERSAL, 0x13): strings.PrintableString,
+		(Class.UNIVERSAL, 0x14): strings.TeletexString,
+		(Class.UNIVERSAL, 0x15): strings.VideotexString,
+		(Class.UNIVERSAL, 0x16): strings.IA5String,
+		(Class.UNIVERSAL, 0x17): datetime.UTCTime,
+		(Class.UNIVERSAL, 0x18): datetime.GeneralizedTime,
+		(Class.UNIVERSAL, 0x19): strings.GraphicString,
+		(Class.UNIVERSAL, 0x1A): strings.VisibleString,
+		(Class.UNIVERSAL, 0x1B): strings.GeneralString,
+		(Class.UNIVERSAL, 0x1C): strings.UniversalString,
+		#(Class.UNIVERSAL, 0x1D): strings.UnrestrictedCharacterStringType,
+		(Class.UNIVERSAL, 0x1E): strings.BMPString,
+		(Class.UNIVERSAL, 0x1F): datetime.Date,
+		#(Class.UNIVERSAL, 0x20): other.TimeOfDay,
+		#(Class.UNIVERSAL, 0x21): other.DateTime,
+		#(Class.UNIVERSAL, 0x22): other.Duration,
+		#(Class.UNIVERSAL, 0x23): other.InternationalOID,
+		#(Class.UNIVERSAL, 0x24): other.RelativeInternationalOID
 	}
 
 	# A list of Tags that may contain embedded ASN.1
